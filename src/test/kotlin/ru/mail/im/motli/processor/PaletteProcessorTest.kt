@@ -46,7 +46,7 @@ class PaletteProcessorTest {
 
     @Test
     fun fill() {
-        val resources = ResourceSet()
+        val resources = ResourceSet(config)
         PaletteProcessor(config).fill(resources)
 
         var theme = resources.getTheme("green")
