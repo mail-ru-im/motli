@@ -6,8 +6,8 @@ import ru.mail.im.motli.config.AppConfig
 import java.io.File
 
 class ResourceWriter(val config: AppConfig) {
-    fun write(resources: ResourceFileSet) {
-        resources.files.forEach {
+    fun write(fileSet: ResourceFileSet) {
+        fileSet.files.forEach {
             writeFile(it)
         }
     }

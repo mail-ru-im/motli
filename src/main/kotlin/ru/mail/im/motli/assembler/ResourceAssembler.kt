@@ -2,19 +2,19 @@ package ru.mail.im.motli.assembler
 
 import ru.mail.im.motli.NamingConvention
 import ru.mail.im.motli.config.AppConfig
-import ru.mail.im.motli.resource.ResourceSet
+import ru.mail.im.motli.resource.ThemeSet
 
 class ResourceAssembler(private val config: AppConfig, private val naming: NamingConvention) {
 
-    fun assemble(resources: ResourceSet): ResourceFileSet {
-        verifyResource(resources)
+    fun assemble(themes: ThemeSet): ResourceFileSet {
+        verifyThemes(themes)
         val result = ResourceFileSet()
-        config.themes.forEach{ ThemeAssembler(resources.getTheme(it), config, naming).assemble(result) }
+        config.themes.forEach{ ThemeAssembler(themes.getTheme(it), config, naming).assemble(result) }
         return result
     }
 
-    private fun verifyResource(resources: ResourceSet) {
-        val themes = config.themes.map { resources.getTheme(it) }
+    private fun verifyThemes(themeSet: ThemeSet) {
+        val themes = config.themes.map { themeSet.getTheme(it) }
 
         if (themes.map { it.colors.size }.toSet().size != 1) {
             throw IllegalArgumentException("All themes should contain the same number of colors")

@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import ru.mail.im.motli.config.AppConfig
 import ru.mail.im.motli.config.AppConfigDto
-import ru.mail.im.motli.resource.ResourceSet
+import ru.mail.im.motli.resource.ThemeSet
 import java.nio.charset.StandardCharsets
 
 
@@ -46,17 +46,17 @@ class PaletteProcessorTest {
 
     @Test
     fun fill() {
-        val resources = ResourceSet(config)
-        PaletteProcessor(config).fill(resources)
+        val themes = ThemeSet(config)
+        PaletteProcessor(config).fill(themes)
 
-        var theme = resources.getTheme("green")
+        var theme = themes.getTheme("green")
         assertEquals(2, theme.colors.size)
         assertEquals("primary", theme.colors[0].name)
         assertEquals("#FF00FF", theme.colors[0].value)
         assertEquals("secondary", theme.colors[1].name)
         assertEquals("#00FF00", theme.colors[1].value)
 
-        theme = resources.getTheme("blue")
+        theme = themes.getTheme("blue")
         assertEquals(2, theme.colors.size)
         assertEquals("primary", theme.colors[0].name)
         assertEquals("#AABBCC", theme.colors[0].value)

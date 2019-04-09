@@ -2,7 +2,7 @@ package ru.mail.im.motli.resource
 
 import ru.mail.im.motli.config.AppConfig
 
-class ResourceSet(config: AppConfig) {
+class ThemeSet(config: AppConfig) {
 
     private val themes = config.themes.associate { it to Theme(it) }
 

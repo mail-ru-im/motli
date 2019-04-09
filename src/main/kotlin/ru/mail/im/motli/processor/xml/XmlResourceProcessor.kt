@@ -3,7 +3,7 @@ package ru.mail.im.motli.processor.xml
 import ru.mail.im.motli.config.AppConfig
 import ru.mail.im.motli.processor.ResourceProcessor
 import ru.mail.im.motli.resource.AbstractResource
-import ru.mail.im.motli.resource.ResourceSet
+import ru.mail.im.motli.resource.ThemeSet
 import java.io.File
 import java.io.FileFilter
 
@@ -16,20 +16,20 @@ abstract class XmlResourceProcessor(protected val config: AppConfig,
 
     abstract fun createResolver(resolverName: String): ResourceResolver
 
-    override fun fill(resources: ResourceSet) {
+    override fun fill(themes: ThemeSet) {
         val directory = File(config.dataDirectory, directory)
         val drawables = directory.listFiles(FileFilter { !it.isDirectory && it.name.endsWith(".xml") })
-        drawables?.forEach { processFile(it, resources) }
+        drawables?.forEach { processFile(it, themes) }
     }
 
-    private fun processFile(file: File, resources: ResourceSet) {
+    private fun processFile(file: File, themes: ThemeSet) {
         val content = file.readText()
         val qualifiers = extractQualifiers(file)
-        config.themes.forEach { theme ->
+        config.themes.forEach { themeName ->
             val output = placeholderPattern.replace(content) {
-                createResolver(it.groupValues[1]).resolve(it.groupValues[2], theme)
+                createResolver(it.groupValues[1]).resolve(it.groupValues[2], themeName)
             }
-            resources.getTheme(theme).putResource(createResource(extractName(file), output, qualifiers))
+            themes.getTheme(themeName).putResource(createResource(extractName(file), output, qualifiers))
         }
     }
 

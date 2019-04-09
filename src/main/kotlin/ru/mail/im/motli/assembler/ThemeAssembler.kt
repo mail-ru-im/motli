@@ -14,18 +14,18 @@ class ThemeAssembler(private var theme: Theme,
     private val colorStateListAttributes = ArrayList<Attribute>()
     private val drawableAttributes = ArrayList<Attribute>()
 
-    fun assemble(resources: ResourceFileSet) {
-        assembleColors(resources)
-        assembleColorStateLists(resources)
-        assembleDrawables(resources)
-        assembleAttributes(resources)
-        assembleStyle(resources)
+    fun assemble(fileSet: ResourceFileSet) {
+        assembleColors(fileSet)
+        assembleColorStateLists(fileSet)
+        assembleDrawables(fileSet)
+        assembleAttributes(fileSet)
+        assembleStyle(fileSet)
     }
 
-    private fun assembleColors(resources: ResourceFileSet) {
+    private fun assembleColors(fileSet: ResourceFileSet) {
         val sorted = toSortedList(theme.colors)
         val file = ResourceFile(naming.getColorFileName(theme.name), "values")
-        resources.addFile(file)
+        fileSet.addFile(file)
 
         file.begin()
         sorted.forEach {
@@ -36,33 +36,33 @@ class ThemeAssembler(private var theme: Theme,
         file.end()
     }
 
-    private fun assembleColorStateLists(resources: ResourceFileSet) {
+    private fun assembleColorStateLists(fileSet: ResourceFileSet) {
         val sorted = toSortedList(theme.colorStateLists)
         sorted.forEach {
             val colorName = naming.getColorStateListName(it.name, theme.name)
             val file = ResourceFile("$colorName.xml", "color" + it.qualifiers)
             file.addText(it.content)
-            resources.addFile(file)
+            fileSet.addFile(file)
             if (it.qualifiers.isEmpty()) {
                 colorStateListAttributes.add(Attribute(naming.getColorStateListAttributeName(it.name), "@color/$colorName"))
             }
         }
     }
 
-    private fun assembleDrawables(resources: ResourceFileSet) {
+    private fun assembleDrawables(fileSet: ResourceFileSet) {
         val sorted = toSortedList(theme.drawables)
         sorted.forEach {
             val drawableName = naming.getDrawableName(it.name, theme.name)
             val file = ResourceFile("$drawableName.xml", "drawable" + it.qualifiers)
             file.addText(it.content)
-            resources.addFile(file)
+            fileSet.addFile(file)
             if (it.qualifiers.isEmpty()) {
                 drawableAttributes.add(Attribute(naming.getDrawableAttributeName(it.name), "@drawable/$drawableName"))
             }
         }
     }
 
-    private fun assembleAttributes(resources: ResourceFileSet) {
+    private fun assembleAttributes(fileSet: ResourceFileSet) {
         val attrs = ResourceFile("attrs.xml", "values")
         attrs.begin()
         attrs.addLine(1, "<declare-styleable name=\"GeneratedAttrs\">")
@@ -75,10 +75,10 @@ class ThemeAssembler(private var theme: Theme,
 
         attrs.addLine(1, "</declare-styleable>")
         attrs.end()
-        resources.addFile(attrs)
+        fileSet.addFile(attrs)
     }
 
-    private fun assembleStyle(resources: ResourceFileSet) {
+    private fun assembleStyle(fileSet: ResourceFileSet) {
         val themeFile = ResourceFile(naming.getStyleFileName(theme.name), "values")
         themeFile.begin()
         themeFile.addLine(1, "<style name=\"${naming.getStyleName(theme.name)}\" parent=\"${config.parentTheme}\">")
@@ -91,7 +91,7 @@ class ThemeAssembler(private var theme: Theme,
 
         themeFile.addLine(1, "</style>")
         themeFile.end()
-        resources.addFile(themeFile)
+        fileSet.addFile(themeFile)
     }
 
     private fun addAttributeDeclaration(file: ResourceFile, blockName: String, format: String, attributes: List<Attribute>) {

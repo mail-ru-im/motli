@@ -7,16 +7,16 @@ import ru.mail.im.motli.config.AppConfig
 import ru.mail.im.motli.config.AppConfigDto
 import java.io.File
 
-class ResourceSetTest {
+class ThemeSetTest {
 
     @Test
     fun getTheme() {
-        assertNotNull(ResourceSet(config("green")).getTheme("green"))
+        assertNotNull(ThemeSet(config("green")).getTheme("green"))
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun nonExistingTheme() {
-        ResourceSet(config("blue")).getTheme("green")
+        ThemeSet(config("blue")).getTheme("green")
     }
 
     private fun config(vararg themes: String) = AppConfig(

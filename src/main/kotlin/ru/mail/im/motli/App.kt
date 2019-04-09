@@ -7,7 +7,7 @@ import ru.mail.im.motli.config.AppConfigDto
 import ru.mail.im.motli.processor.PaletteProcessor
 import ru.mail.im.motli.processor.xml.ColorStateListProcessor
 import ru.mail.im.motli.processor.xml.DrawableProcessor
-import ru.mail.im.motli.resource.ResourceSet
+import ru.mail.im.motli.resource.ThemeSet
 import java.io.File
 import java.io.FileReader
 
@@ -24,21 +24,21 @@ fun main(args: Array<String>) {
     val config = AppConfig(configFile.parentFile, configDto)
     config.verify()
 
-    val resources = ResourceSet(config)
+    val themes = ThemeSet(config)
 
     System.out.println("Processing palette")
-    PaletteProcessor(config).fill(resources)
+    PaletteProcessor(config).fill(themes)
 
     val namingConvention = DefaultNamingConvention()
 
     System.out.println("Processing color state list resources")
-    ColorStateListProcessor(config, namingConvention).fill(resources)
+    ColorStateListProcessor(config, namingConvention).fill(themes)
 
     System.out.println("Processing drawable resources")
-    DrawableProcessor(config, namingConvention).fill(resources)
+    DrawableProcessor(config, namingConvention).fill(themes)
 
     System.out.println("Assembling")
-    val fileSet = ResourceAssembler(config, namingConvention).assemble(resources)
+    val fileSet = ResourceAssembler(config, namingConvention).assemble(themes)
 
     System.out.println("Writing")
     ResourceWriter(config).write(fileSet)

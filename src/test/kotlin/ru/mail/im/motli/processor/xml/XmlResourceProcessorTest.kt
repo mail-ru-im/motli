@@ -8,7 +8,7 @@ import org.junit.rules.TemporaryFolder
 import ru.mail.im.motli.config.AppConfig
 import ru.mail.im.motli.config.AppConfigDto
 import ru.mail.im.motli.resource.Drawable
-import ru.mail.im.motli.resource.ResourceSet
+import ru.mail.im.motli.resource.ThemeSet
 import java.io.File
 
 class XmlResourceProcessorTest {
@@ -33,9 +33,9 @@ class XmlResourceProcessorTest {
 
     @Test
     fun fill() {
-        val resources = process("foo.xml", "Hello \${test.world}")
+        val themes = process("foo.xml", "Hello \${test.world}")
         listOf("green", "blue").forEach {
-            val drawables = resources.getTheme(it).drawables
+            val drawables = themes.getTheme(it).drawables
             assertEquals("foo", drawables.first().name)
             assertEquals("Hello $it world", drawables.first().content)
         }
@@ -43,18 +43,18 @@ class XmlResourceProcessorTest {
 
     @Test
     fun fillWithQualifiers() {
-        val resources = process("bar-sw600dp-land.xml", "Hello \${test.world}")
+        val themes = process("bar-sw600dp-land.xml", "Hello \${test.world}")
         listOf("green", "blue").forEach {
-            val drawables = resources.getTheme(it).drawables
+            val drawables = themes.getTheme(it).drawables
             assertEquals("-sw600dp-land", drawables.first().qualifiers)
         }
     }
 
-    private fun process(name: String, content: String) : ResourceSet {
+    private fun process(name: String, content: String) : ThemeSet {
         File(baseDir, name).writeText(content)
-        val resources = ResourceSet(config)
-        TestProcessor(config).fill(resources)
-        return resources
+        val themes = ThemeSet(config)
+        TestProcessor(config).fill(themes)
+        return themes
     }
 
     private inner class TestProcessor(config: AppConfig) : XmlResourceProcessor(config, ".") {
